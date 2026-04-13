@@ -23,13 +23,15 @@ public class PN : Ordination {
 
     public override double doegnDosis()
     {
-	    // definerer variablerne, derefter laver vi regnestykket
-	    int antalgange = getAntalGangeGivet(); 
-	    double antalenheder = antalEnheder;
-	    int antaldagegivet = getAntalGangeGivet();
-	    
-	    // følger opsriften fra modulet
-	    return antalgange * antalenheder / antaldagegivet; 
+	    // Find den tidligste og seneste dato hvor der er givet medicin
+	    DateTime førsteDato = dates.Min(d => d.dato);
+	    DateTime sidsteDato = dates.Max(d => d.dato);
+
+	    // Beregn antal hele dage mellem første og sidste givning (begge inklusive)
+	    int antalDage = (sidsteDato.Date - førsteDato.Date).Days + 1;
+
+	    // Formlen fra opgaven
+	    return (dates.Count * antalEnheder) / antalDage;
     }
 
 
