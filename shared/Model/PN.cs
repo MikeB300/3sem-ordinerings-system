@@ -17,13 +17,19 @@ public class PN : Ordination {
     /// Returner false ellers og datoen givesDen ignoreres
     /// </summary>
     public bool givDosis(Dato givesDen) {
-        // TODO: Implement!
+        
         return false;
     }
 
-    public override double doegnDosis() {
-    	// TODO: Implement!
-        return -1;
+    public override double doegnDosis()
+    {
+	    // definerer variablerne, derefter laver vi regnestykket
+	    int antalgange = getAntalGangeGivet(); 
+	    double antalenheder = antalEnheder;
+	    int antaldagegivet = getAntalGangeGivet();
+	    
+	    // følger opsriften fra modulet
+	    return antalgange * antalenheder / antaldagegivet; 
     }
 
 
