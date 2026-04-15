@@ -191,14 +191,37 @@ public class DataService
 
     /// <summary>
     /// Den anbefalede dosis for den pågældende patient, per døgn, hvor der skal tages hensyn til
-	/// patientens vægt. Enheden afhænger af lægemidlet. Patient og lægemiddel må ikke være null.
+    /// patientens vægt. Enheden afhænger af lægemidlet. Patient og lægemiddel må ikke være null.
     /// </summary>
     /// <param name="patient"></param>
     /// <param name="laegemiddel"></param>
     /// <returns></returns>
-	public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId) {
-        // TODO: Implement!
+    public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId)
+    {
+        if (patientId != null || laegemiddelId != null)
+        {
+            var patient = db.Patienter.Find(patientId);
+            var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
+
+            var vægt = patient.vaegt;
+            var antalEnhederHvisLet = laegemiddel.enhedPrKgPrDoegnLet;
+            var antalEnhederHvisNormal = laegemiddel.enhedPrKgPrDoegnNormal;
+            var antalEnhederHvisTung = laegemiddel.enhedPrKgPrDoegnTung;
+
+            if (vægt < 25) // hvis let
+            {
+                return antalEnhederHvisLet * vægt;
+            }
+
+            if (vægt > 120) // hvis tung
+            {
+                return antalEnhederHvisTung * vægt;
+            }
+
+            // hvis normal
+            return antalEnhederHvisNormal * vægt;
+        }
+
         return -1;
-	}
-    
+    }
 }
