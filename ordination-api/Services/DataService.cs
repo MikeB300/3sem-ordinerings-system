@@ -178,14 +178,15 @@ public class DataService
 
     public string AnvendOrdination(int id, Dato dato)
     {
-        var PN = db.PNs.Find(id);
+        var ordination = db.Ordinationer.Find(id);
 
-        if (PN.getType() == "PN")
+        if (ordination is PN pn)
         {
-            PN.givDosis(dato);
+            pn.givDosis(dato);
+            db.SaveChanges();
+            return "anvendt";
         }
-
-        return "anvendt";
+        return "Kun PN-ordinationer kan anvendes manuelt";
     }
 
     /// <summary>
