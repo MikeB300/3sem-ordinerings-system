@@ -155,7 +155,7 @@ public class DataService
         
         var dagligfast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag,  antalAften, antalNat);
         
-        db.DagligFaste.Add(dagligfast);
+        db.Ordinationer.Add(dagligfast);
         patient.ordinationer.Add(dagligfast);
         
         db.SaveChanges();
@@ -163,13 +163,29 @@ public class DataService
     }
 
     public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
-        return null!;
+        
+        var patient = db.Patienter.Find(patientId);
+        var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
+
+        var DagligSkæv = new DagligSkæv(startDato,slutDato, laegemiddel, doser);
+
+        db.Ordinationer.Add(DagligSkæv);
+        patient.ordinationer.Add(DagligSkæv);
+        
+        db.SaveChanges();
+        return DagligSkæv;
     }
 
-    public string AnvendOrdination(int id, Dato dato) {
-        // TODO: Implement!
-        return null!;
+    public string AnvendOrdination(int id, Dato dato)
+    {
+        var PN = db.PNs.Find(id);
+
+        if (PN.getType() == "PN")
+        {
+            PN.givDosis(dato);
+        }
+
+        return "anvendt";
     }
 
     /// <summary>
