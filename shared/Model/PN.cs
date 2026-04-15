@@ -17,12 +17,20 @@ public class PN : Ordination {
     /// Returner false ellers og datoen givesDen ignoreres
     /// </summary>
     public bool givDosis(Dato givesDen) {
-        
-        return false;
+
+	    if (givesDen.dato >= startDen && givesDen.dato <= slutDen)
+	    {
+		    dates.Add(givesDen);
+		    return true;
+	    }
+	    return false;
     }
 
     public override double doegnDosis()
     {
+	    
+	    if (dates.Count == 0) return -1;
+	    
 	    // Find den tidligste og seneste dato hvor der er givet medicin
 	    DateTime førsteDato = dates.Min(d => d.dato);
 	    DateTime sidsteDato = dates.Max(d => d.dato);
