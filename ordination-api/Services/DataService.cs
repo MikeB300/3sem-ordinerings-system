@@ -150,8 +150,16 @@ public class DataService
         double antalMorgen, double antalMiddag, double antalAften, double antalNat, 
         DateTime startDato, DateTime slutDato) {
 
-        // TODO: Implement!
-        return null!;
+        var patient = db.Patienter.Find(patientId);
+        var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
+        
+        var dagligfast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag,  antalAften, antalNat);
+        
+        db.DagligFaste.Add(dagligfast);
+        patient.ordinationer.Add(dagligfast);
+        
+        db.SaveChanges();
+        return dagligfast;
     }
 
     public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
