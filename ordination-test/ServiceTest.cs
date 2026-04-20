@@ -42,14 +42,42 @@ public class ServiceTest
     }
 
     [TestMethod]
+    public void GetAnbefaletDosisPerDoegn_LetPatient()
+    {
+        Patient patient = service.GetPatienter().First();
+        patient.vaegt = 20; // gør patient "let"
+    
+        Laegemiddel lm = service.GetLaegemidler().First();
+        
+        double dosis = service.GetAnbefaletDosisPerDøgn(patient.PatientId, lm.LaegemiddelId);
+        
+        double forventet = patient.vaegt * lm.enhedPrKgPrDoegnLet;
+
+        Assert.AreEqual(forventet, dosis);
+    }
+    
+    [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void TestAtKodenSmiderEnException()
     {
-        // Herunder skal man så kalde noget kode,
-        // der smider en exception.
+        // Henter en gyldig patient og et gyldigt lægemiddel fra databasen
+        Patient patient = service.GetPatienter().First();
+        Laegemiddel lm = service.GetLaegemidler().First();
 
-        // Hvis koden _ikke_ smider en exception,
-        // så fejler testen.
+        // Tjekker at der i starten kun findes 1 DagligFast i systemet
+        Assert.AreEqual(1, service.GetDagligFaste().Count());
+
+        
+        // Her kaldes metoden med en ugyldig patientId (-1)
+        // Det betyder at db.Patienter.Find(-1) returnerer null
+        // Når koden derefter prøver at tilføje en ordination til patient,
+        // vil det give en NullReferenceException
+        service.OpretDagligFast(-1, lm.LaegemiddelId,
+            2, 2, 1, 0, DateTime.Now, DateTime.Now.AddDays(3));
+        
+        // Denne linje bliver aldrig nået, fordi testen forventer en exception
+        // Hvis exception IKKE bliver kastet, vil testen fejle
+        Assert.AreEqual(2, service.GetDagligFaste().Count());
 
         Console.WriteLine("Her kommer der ikke en exception. Testen fejler.");
     }
