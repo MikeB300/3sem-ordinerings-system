@@ -57,6 +57,36 @@ public class ServiceTest
     }
     
     [TestMethod]
+    public void GetAnbefaletDosisPerDoegn_Normal()
+    {
+        Patient patient = service.GetPatienter().First();
+        patient.vaegt = 25; // gør patient "normal"
+
+        Laegemiddel lm = service.GetLaegemidler().First();
+
+        double resultat = service.GetAnbefaletDosisPerDøgn(patient.PatientId, lm.LaegemiddelId);
+
+        double forventet = 25 * lm.enhedPrKgPrDoegnNormal;
+
+        Assert.AreEqual(forventet, resultat);
+    }
+    
+    [TestMethod]
+    public void GetAnbefaletDosisPerDoegn_Tung()
+    {
+        Patient patient = service.GetPatienter().First();
+        patient.vaegt = 130; // gør patient "tung"
+
+        Laegemiddel lm = service.GetLaegemidler().First();
+
+        double resultat = service.GetAnbefaletDosisPerDøgn(patient.PatientId, lm.LaegemiddelId);
+
+        double forventet = 130 * lm.enhedPrKgPrDoegnTung;
+
+        Assert.AreEqual(forventet, resultat);
+    }
+    
+    [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void TestAtKodenSmiderEnException()
     {
