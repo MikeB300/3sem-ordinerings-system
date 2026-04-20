@@ -42,7 +42,7 @@ public class ServiceTest
     }
 
     [TestMethod]
-    public void GetAnbefaletDosisPerDoegn_LetPatient()
+    public void GetAnbefaletDosisPerDoegn_Let()
     {
         Patient patient = service.GetPatienter().First();
         patient.vaegt = 20; // gør patient "let"
