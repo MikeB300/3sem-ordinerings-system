@@ -21,7 +21,7 @@ public class DataService
     public void SeedData() {
 
         // Patients
-        Patient[] patients = new Patient[5];
+        Patient[] patients = new Patient[9];
         patients[0] = db.Patienter.FirstOrDefault()!;
 
         if (patients[0] == null)
@@ -31,12 +31,20 @@ public class DataService
             patients[2] = new Patient("050972-1233", "Hans Jørgensen", 89.4);
             patients[3] = new Patient("011064-1522", "Ulla Nielsen", 59.9);
             patients[4] = new Patient("123456-1234", "Ib Hansen", 87.7);
+            patients[5] = new Patient("123456-1234", "TC-LET-1", 20);
+            patients[6] = new Patient("123456-1234", "TC-NORMAL-1", 25);
+            patients[7] = new Patient("123456-1234", "TC-NORMAL-2", 120);
+            patients[8] = new Patient("123456-1234", "TC-TUNG-1", 130);
 
             db.Patienter.Add(patients[0]);
             db.Patienter.Add(patients[1]);
             db.Patienter.Add(patients[2]);
             db.Patienter.Add(patients[3]);
             db.Patienter.Add(patients[4]);
+            db.Patienter.Add(patients[5]);
+            db.Patienter.Add(patients[6]);
+            db.Patienter.Add(patients[7]);
+            db.Patienter.Add(patients[8]);
             db.SaveChanges();
         }
 
@@ -146,18 +154,34 @@ public class DataService
         return pn;
     }
 
-    public DagligFast OpretDagligFast(int patientId, int laegemiddelId, 
-        double antalMorgen, double antalMiddag, double antalAften, double antalNat, 
-        DateTime startDato, DateTime slutDato) {
+    public DagligFast OpretDagligFast(int patientId, int laegemiddelId,
+        double antalMorgen, double antalMiddag, double antalAften, double antalNat,
+        DateTime startDato, DateTime slutDato)
+    {
+        if (patientId <= 0)
+            throw new ArgumentNullException(nameof(patientId));
+
+        if (laegemiddelId <= 0)
+            throw new ArgumentNullException(nameof(laegemiddelId));
 
         var patient = db.Patienter.Find(patientId);
+        if (patient == null)
+            throw new ArgumentNullException(nameof(patient));
+
         var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
+        if (laegemiddel == null)
+            throw new ArgumentNullException(nameof(laegemiddelId));
         
-        var dagligfast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag,  antalAften, antalNat);
-        
+        if (startDato > slutDato)
+            throw new InvalidOperationException("Startdato skal være før slutdato.");
+
+        var dagligfast = new DagligFast(
+            startDato, slutDato, laegemiddel,
+            antalMorgen, antalMiddag, antalAften, antalNat);
+
         db.Ordinationer.Add(dagligfast);
         patient.ordinationer.Add(dagligfast);
-        
+
         db.SaveChanges();
         return dagligfast;
     }

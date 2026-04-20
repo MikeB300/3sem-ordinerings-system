@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ordination_api.Migrations
 {
-    public partial class InitialMigration : Migration
+    /// <inheritdoc />
+    public partial class InitialCreate : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -79,7 +81,7 @@ namespace ordination_api.Migrations
                     startDen = table.Column<DateTime>(type: "TEXT", nullable: false),
                     slutDen = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LaegemiddelId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
                     PatientId = table.Column<int>(type: "INTEGER", nullable: true),
                     MorgenDosisDosisId = table.Column<int>(type: "INTEGER", nullable: true),
                     MiddagDosisDosisId = table.Column<int>(type: "INTEGER", nullable: true),
@@ -182,6 +184,7 @@ namespace ordination_api.Migrations
                 principalColumn: "OrdinationId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
