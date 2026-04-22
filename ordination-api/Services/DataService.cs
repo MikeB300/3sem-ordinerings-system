@@ -222,8 +222,16 @@ public class DataService
     /// <returns></returns>
     public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId)
     {
-        if (patientId != null || laegemiddelId != null)
+        if (patientId <= 0)
         {
+            throw new ArgumentOutOfRangeException(nameof(patientId));
+        }
+
+        if (laegemiddelId <= 0)
+        {   
+            throw new ArgumentOutOfRangeException(nameof(laegemiddelId));
+        }
+        
             var patient = db.Patienter.Find(patientId);
             var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
 
@@ -244,8 +252,6 @@ public class DataService
 
             // hvis normal
             return antalEnhederHvisNormal * vægt;
-        }
-
-        return -1;
+        
     }
 }
